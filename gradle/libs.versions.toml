@@ -5,11 +5,10 @@ coreKtx = "1.15.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.10.01"
-navCompose = "2.8.0"
+navCompose = "2.8.3"
 hilt_version = "2.52"
 androidx-hilt_version = "1.2.0"
 room_version = "2.6.1"
-ksp_version = "2.0.21-1.0.25"
 coroutines = "1.7.3"
 gson = "2.10.1"
 
@@ -51,7 +50,5 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp_version" }
-
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt_version" }
 
