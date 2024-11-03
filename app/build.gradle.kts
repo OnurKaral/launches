@@ -63,12 +63,20 @@ dependencies {
 
     implementation(libs.hilt)
     implementation(libs.hilt.navigation)
+    implementation(libs.androidx.ui.test.junit4.android)
+    testImplementation(libs.hilt.test)
+    androidTestImplementation(libs.hilt.test)
+    kaptAndroidTest(libs.hilt.compiler)
     kapt(libs.hilt.compiler.viewmodel)
     kapt(libs.hilt.compiler)
 
     implementation(libs.room)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
+
+    testImplementation(libs.mokk)
+    testImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.coroutines.test)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
