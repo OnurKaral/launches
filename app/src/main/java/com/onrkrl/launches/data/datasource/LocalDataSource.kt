@@ -15,39 +15,39 @@ class LocalDataSource @Inject constructor(
     private val context: Context
 ) : SatelliteDataSource {
 
+    private val gson = Gson()
+    private val satellitesData by lazy { loadJsonFromAssets("satellites.json") }
+    private val satelliteDetailsData by lazy { loadJsonFromAssets("satellite-detail.json") }
+    private val positionsData by lazy { loadJsonFromAssets("positions.json") }
+
+    private fun loadJsonFromAssets(fileName: String): String =
+        context.assets.open(fileName).bufferedReader().use { it.readText() }
+
     override suspend fun getSatellites(): List<Satellite> = withContext(Dispatchers.IO) {
-        val jsonString =
-            context.assets.open("satellites.json").bufferedReader().use { it.readText() }
         val type = object : TypeToken<List<Satellite>>() {}.type
-        Gson().fromJson(jsonString, type)
+        gson.fromJson(satellitesData, type)
     }
 
-    override suspend fun getSatelliteDetail(id: Int): SatelliteDetail? =
-        withContext(Dispatchers.IO) {
-            val jsonString =
-                context.assets.open("satellite-detail.json").bufferedReader().use { it.readText() }
-            val type = object : TypeToken<List<SatelliteDetail>>() {}.type
-            val details: List<SatelliteDetail> = Gson().fromJson(jsonString, type)
-            details.find { it.id == id }
-        }
+    override suspend fun getSatelliteDetail(id: Int): SatelliteDetail? = withContext(Dispatchers.IO) {
+        val type = object : TypeToken<List<SatelliteDetail>>() {}.type
+        val details: List<SatelliteDetail> = gson.fromJson(satelliteDetailsData, type)
+        details.find { it.id == id }
+    }
 
     override suspend fun getPositions(id: Int): List<Position> = withContext(Dispatchers.IO) {
-        val jsonString =
-            context.assets.open("positions.json").bufferedReader().use { it.readText() }
-        val jsonObject = JSONObject(jsonString)
+        val jsonObject = JSONObject(positionsData)
         val listArray = jsonObject.getJSONArray("list")
         for (i in 0 until listArray.length()) {
             val item = listArray.getJSONObject(i)
             if (item.getString("id") == id.toString()) {
                 val positionsArray = item.getJSONArray("positions")
-                val positions = mutableListOf<Position>()
-                for (j in 0 until positionsArray.length()) {
+                return@withContext List(positionsArray.length()) { j ->
                     val pos = positionsArray.getJSONObject(j)
-                    positions.add(Position(pos.getDouble("posX"), pos.getDouble("posY")))
+                    Position(pos.getDouble("posX"), pos.getDouble("posY"))
                 }
-                return@withContext positions
             }
         }
         emptyList()
     }
 }
+
