@@ -7,16 +7,16 @@ import com.onrkrl.launches.domain.model.SatelliteDetail
 
 fun SatelliteDetailEntity.toDomainModel() = SatelliteDetail(
     id = id,
-    costPerLaunch = costPerLaunch,
-    firstFlight = firstFlight,
+    cost_per_launch = costPerLaunch,
+    first_flight = firstFlight,
     height = height,
     mass = mass
 )
 
 fun SatelliteDetail.toEntity() = SatelliteDetailEntity(
     id = id,
-    costPerLaunch = costPerLaunch,
-    firstFlight = firstFlight,
+    costPerLaunch = cost_per_launch,
+    firstFlight = first_flight,
     height = height,
     mass = mass
 )
