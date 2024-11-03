@@ -62,7 +62,10 @@ dependencies {
     implementation(libs.gson)
 
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation)
+    kapt(libs.hilt.compiler.viewmodel)
     kapt(libs.hilt.compiler)
+
     implementation(libs.room)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
