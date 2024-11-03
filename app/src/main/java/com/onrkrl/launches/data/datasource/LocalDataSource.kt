@@ -6,8 +6,6 @@ import com.google.gson.reflect.TypeToken
 import com.onrkrl.launches.domain.model.Position
 import com.onrkrl.launches.domain.model.Satellite
 import com.onrkrl.launches.domain.model.SatelliteDetail
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
 
