@@ -23,31 +23,32 @@ class LocalDataSource @Inject constructor(
     private fun loadJsonFromAssets(fileName: String): String =
         context.assets.open(fileName).bufferedReader().use { it.readText() }
 
-    override suspend fun getSatellites(): List<Satellite> = withContext(Dispatchers.IO) {
+    override suspend fun getSatellites(): List<Satellite> {
         val type = object : TypeToken<List<Satellite>>() {}.type
-        gson.fromJson(satellitesData, type)
+        return gson.fromJson(satellitesData, type)
     }
 
-    override suspend fun getSatelliteDetail(id: Int): SatelliteDetail? = withContext(Dispatchers.IO) {
+    override suspend fun getSatelliteDetail(id: Int): SatelliteDetail? {
         val type = object : TypeToken<List<SatelliteDetail>>() {}.type
         val details: List<SatelliteDetail> = gson.fromJson(satelliteDetailsData, type)
-        details.find { it.id == id }
+        return details.find { it.id == id }
     }
 
-    override suspend fun getPositions(id: Int): List<Position> = withContext(Dispatchers.IO) {
+    override suspend fun getPositions(id: Int): List<Position> {
         val jsonObject = JSONObject(positionsData)
         val listArray = jsonObject.getJSONArray("list")
         for (i in 0 until listArray.length()) {
             val item = listArray.getJSONObject(i)
             if (item.getString("id") == id.toString()) {
                 val positionsArray = item.getJSONArray("positions")
-                return@withContext List(positionsArray.length()) { j ->
+                return List(positionsArray.length()) { j ->
                     val pos = positionsArray.getJSONObject(j)
                     Position(pos.getDouble("posX"), pos.getDouble("posY"))
                 }
             }
         }
-        emptyList()
+        return emptyList()
     }
 }
+
 
