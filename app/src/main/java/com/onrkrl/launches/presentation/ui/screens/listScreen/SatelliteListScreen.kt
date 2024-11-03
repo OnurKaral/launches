@@ -3,8 +3,10 @@ package com.onrkrl.launches.presentation.ui.screens.listScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,10 +14,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +35,7 @@ import androidx.navigation.NavController
 import com.onrkrl.launches.presentation.ui.screens.listScreen.widget.SatelliteListItem
 import com.onrkrl.launches.util.Resource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SatelliteListScreen(navController: NavController) {
     val viewModel: SatelliteListViewModel = hiltViewModel()
@@ -35,51 +43,69 @@ fun SatelliteListScreen(navController: NavController) {
     val satellites = viewModel.filteredSatellites.collectAsState()
     val query by viewModel.searchQuery.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = { viewModel.searchQuery.value = it },
-            placeholder = { Text("Search") },
-            leadingIcon = {
-                Icon(Icons.Filled.Search, contentDescription = "Search Icon")
-            },
-            singleLine = true,
-            shape = RoundedCornerShape(16.dp),
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Satellites") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        }
+    ) { paddingValues ->
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedTextField(
+                value = query,
+                onValueChange = { viewModel.searchQuery.value = it },
+                placeholder = { Text("Search") },
+                leadingIcon = {
+                    Icon(Icons.Filled.Search, contentDescription = "Search Icon")
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
 
-        when (satellitesResource) {
-            is Resource.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is Resource.Success -> {
-                LazyColumn(
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(satellites.value) { satellite ->
-                        SatelliteListItem(
-                            satellite = satellite,
-                            onClick = {
-                                navController.navigate("detail/${satellite.id}/${satellite.name}")
-                            }
-                        )
-                        HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
+            when (satellitesResource) {
+                is Resource.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
                     }
                 }
-            }
 
-            is Resource.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = (satellitesResource as Resource.Error).message, color = Color.Red)
+                is Resource.Success -> {
+                    LazyColumn(
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(satellites.value) { satellite ->
+                            SatelliteListItem(
+                                satellite = satellite,
+                                onClick = {
+                                    navController.navigate("detail/${satellite.id}/${satellite.name}")
+                                }
+                            )
+                            HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
+                        }
+                    }
+                }
+
+                is Resource.Error -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = (satellitesResource as Resource.Error).message,
+                            color = Color.Red
+                        )
+                    }
                 }
             }
         }

@@ -26,7 +26,7 @@ fun NavGraph(startDestination: String = "list") {
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id") ?: 0
             val name = backStackEntry.arguments?.getString("name") ?: ""
-            SatelliteDetailScreen(satelliteId = id, satelliteName = name)
+            SatelliteDetailScreen(satelliteId = id, satelliteName = name, navController)
         }
     }
 }
