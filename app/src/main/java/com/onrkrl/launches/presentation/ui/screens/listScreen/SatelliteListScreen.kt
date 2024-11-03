@@ -35,9 +35,11 @@ fun SatelliteListScreen(navController: NavController) {
     val satellites = viewModel.filteredSatellites.collectAsState()
     val query by viewModel.searchQuery.collectAsState()
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         OutlinedTextField(
             value = query,
             onValueChange = { viewModel.searchQuery.value = it },
@@ -67,7 +69,7 @@ fun SatelliteListScreen(navController: NavController) {
                         SatelliteListItem(
                             satellite = satellite,
                             onClick = {
-                                navController.navigate("detail/${satellite.id}")
+                                navController.navigate("detail/${satellite.id}/${satellite.name}")
                             }
                         )
                         HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
