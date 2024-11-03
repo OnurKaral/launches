@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.ksp)
+    kotlin("kapt")
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -40,6 +41,9 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
 
 dependencies {
 
@@ -58,9 +62,9 @@ dependencies {
     implementation(libs.gson)
 
     implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
     implementation(libs.room)
-    ksp(libs.room.compiler)
+    kapt(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
